@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:path/path.dart';
 import 'package:recase/recase.dart';
 import 'package:yaml/yaml.dart';
@@ -38,6 +37,12 @@ void generate() {
     if (modelName.isEmpty) {
       stdout.write("Enter model name: ");
       modelName = stdin.readLineSync().trim();
+    }
+
+    if(controllerName.isNotEmpty && controllerName == modelName) {
+      print("Class names must be different");
+      modelName = "";
+      controllerName = "";
     }
 
     if (controllerName.isNotEmpty && modelName.isNotEmpty) {
@@ -83,8 +88,15 @@ void generate() {
   final modelIncludePath = context.join(projectName, savePath, "${ReCase(modelName).snakeCase}.dart");
   final controllerIncludePath = context.join(projectName, savePath, "${ReCase(controllerName).snakeCase}.dart");
 
-  final modelTemplate = File("templates/model.template");
-  final controllerTemplate = File("templates/controller.template");
+  var scriptPath = dirname(dirname(Platform.script.path));
+
+  // workaround to a weird ass path issue
+  if(Platform.isWindows && scriptPath.startsWith("/")) {
+    scriptPath = scriptPath.replaceFirst("/", "");
+  }
+
+  final modelTemplate = File(join(scriptPath, "templates", "model.template"));
+  final controllerTemplate = File(join(scriptPath, "templates", "controller.template"));
 
   var errors = [];
   if(!modelTemplate.existsSync()) {
