@@ -1,6 +1,6 @@
 name: momentum_boilerplate
 description: generate momentum boilerplate (controller & models)
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/exts/momentum_boilerplate_generator
 
 environment:
