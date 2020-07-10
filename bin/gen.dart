@@ -1,5 +1,5 @@
 import '../main.dart';
 
-void main() {
- generate();
+void main(List<String> args) {
+ generate(args);
 }

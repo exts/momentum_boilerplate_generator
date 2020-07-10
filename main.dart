@@ -3,7 +3,9 @@ import 'package:path/path.dart';
 import 'package:recase/recase.dart';
 import 'package:yaml/yaml.dart';
 
-void generate() {
+void generate(List<String> args) {
+  bool verbose = args.length > 0 && args.first == "v";
+
   String savePath = "";
 
   String modelName = "";
@@ -90,13 +92,25 @@ void generate() {
 
   var scriptPath = dirname(dirname(Platform.script.path));
 
+  if(verbose) {
+    print("debug: script path - $scriptPath");
+  }
+
   // workaround to a weird ass path issue
   if(Platform.isWindows && scriptPath.startsWith("/")) {
     scriptPath = scriptPath.replaceFirst("/", "");
+    if(verbose) {
+    print("debug: script path windows - $scriptPath");
+    }
   }
 
   final modelTemplate = File(join(scriptPath, "templates", "model.template"));
   final controllerTemplate = File(join(scriptPath, "templates", "controller.template"));
+
+  if(verbose) {
+    print("debug: model template path - $modelTemplate");
+    print("debug: controller template path - $controllerTemplate");
+  }
 
   var errors = [];
   if(!modelTemplate.existsSync()) {
