@@ -1,0 +1,7 @@
+name: momentum_boilerplate
+description: generate momentum boilerplate (controller & models)
+version: 1.0.0
+dependencies:
+  recase: ^3.0.0
+  yaml: ^2.2.1
+  path: ^1.7.0

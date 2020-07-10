@@ -1,0 +1,13 @@
+import 'package:momentum/momentum.dart';
+import 'package:CONTROLLER_PACKAGE_PATH.dart';
+
+class MODEL_NAME extends MomentumModel<CONTROLLER_NAME> {
+  MODEL_NAME(CONTROLLER_NAME controller) : super(controller);
+
+  @override
+  void update() {
+    MODEL_NAME(
+      this.controller,
+    ).updateMomentum();
+  }
+}
