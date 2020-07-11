@@ -90,43 +90,8 @@ void generate(List<String> args) {
   final modelIncludePath = context.join(projectName, savePath, "${ReCase(modelName).snakeCase}.dart");
   final controllerIncludePath = context.join(projectName, savePath, "${ReCase(controllerName).snakeCase}.dart");
 
-  var scriptPath = dirname(dirname(Platform.script.path));
-
-  if(verbose) {
-    print("debug: script path - $scriptPath");
-  }
-
-  // workaround to a weird ass path issue
-  if(Platform.isWindows && scriptPath.startsWith("/")) {
-    scriptPath = scriptPath.replaceFirst("/", "");
-    if(verbose) {
-    print("debug: script path windows - $scriptPath");
-    }
-  }
-
-  final modelTemplate = File(join(scriptPath, "templates", "model.template"));
-  final controllerTemplate = File(join(scriptPath, "templates", "controller.template"));
-
-  if(verbose) {
-    print("debug: model template path - $modelTemplate");
-    print("debug: controller template path - $controllerTemplate");
-  }
-
-  var errors = [];
-  if(!modelTemplate.existsSync()) {
-    errors.add("templates/model.template is missing");
-  }
-
-  if(!controllerTemplate.existsSync()) {
-    errors.add("templates/controller.template is missing");
-  }
-
-  if(errors.isNotEmpty) {
-    quitMessage("Template error: " + errors.join(", "));
-  }
-
-  var modelTemplateData = modelTemplate.readAsStringSync();
-  var controllerTemplateData = controllerTemplate.readAsStringSync();
+  var modelTemplateData = getModelTemplate();
+  var controllerTemplateData = getControllerTemplate();
 
   if(modelTemplateData.isEmpty || controllerTemplateData.isEmpty) {
     quitMessage("Template error: Both template files must contain template data");
@@ -188,4 +153,35 @@ bool confirmation(String message, String quitMsg) {
     }
   }
   return false;
+}
+
+
+String getControllerTemplate() {
+  return """import 'package:momentum/momentum.dart';
+import 'package:MODEL_PACKAGE_PATH';
+
+class CONTROLLER_NAME extends MomentumController<MODEL_NAME> {
+  @override
+  MODEL_NAME init() {
+    return MODEL_NAME(
+      this,
+    );
+  }
+}""";
+}
+
+String getModelTemplate() {
+  return """import 'package:momentum/momentum.dart';
+import 'package:CONTROLLER_PACKAGE_PATH';
+
+class MODEL_NAME extends MomentumModel<CONTROLLER_NAME> {
+  MODEL_NAME(CONTROLLER_NAME controller) : super(controller);
+
+  @override
+  void update() {
+    MODEL_NAME(
+      this.controller,
+    ).updateMomentum();
+  }
+}""";
 }
